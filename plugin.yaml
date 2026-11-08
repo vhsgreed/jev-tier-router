@@ -1,0 +1,23 @@
+name: jev-tier-router
+label: Jev Tier Router
+version: 0.1.0
+author: Karl Sundström + Hermes
+description: >
+  Per-turn complexity routing between Claude Subscription DirectSDK rungs.
+  On every user turn (decided once per turn) it asks TypeSafe Jev, via
+  OpenRouter's Decisions API on your existing OPENROUTER_API_KEY, whether a
+  small fast model can handle the request, then rewrites the outgoing model
+  to claude-haiku-5-5[1m] (simple) or claude-opus-5-5[1m] (complex). Scores in
+  between and every failure path leave the request byte-identical. Thinking is
+  not touched: Haiku 5.5 and Opus 5.5 reject thinking-off. Disclosure: the
+  current user turn's text (truncated to 4,000 chars) is sent to TypeSafe via
+  the OpenRouter Decisions API per user turn; ~$0.000013 per call.
+requires_hermes: ">=0.21.5"
+provides_middleware:
+  - llm_request
+  - llm_execution
+provides_tools: []
+provides_hooks: []
+optional_env:
+  - name: OPENROUTER_API_KEY
+    description: Same key as your OpenRouter provider; used for the Jev classifier call
